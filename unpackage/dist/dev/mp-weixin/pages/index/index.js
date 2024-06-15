@@ -97,7 +97,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     j: common_vendor.f($data.array, (elem, k0, i0) => {
       return {
         a: common_vendor.o(_ctx.onClick, elem.id),
-        b: "fac62536-3-" + i0 + "," + ("fac62536-2-" + i0),
+        b: "eb9fadde-3-" + i0 + "," + ("eb9fadde-2-" + i0),
         c: common_vendor.p({
           title: elem.title,
           ["sub-title"]: elem.name,
@@ -105,7 +105,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
           thumbnail: $data.avatar
         }),
         d: elem.id,
-        e: "fac62536-2-" + i0
+        e: "eb9fadde-2-" + i0
       };
     }),
     k: common_vendor.p({
@@ -114,5 +114,5 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   };
 }
-const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "D:/wechat-project/cyb/pages/index/index.vue"]]);
+const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "E:/WxFile/cyb/pages/index/index.vue"]]);
 wx.createPage(MiniProgramPage);
