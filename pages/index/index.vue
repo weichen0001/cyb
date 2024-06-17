@@ -11,13 +11,13 @@
 		</uni-section>
 
         
-		<uni-section title="自定义icon" type="line">
+<!-- 		<uni-section title="自定义icon" type="line">
 			<uni-search-bar placeholder="自定义searchIcon" @confirm="search" @cancel="cancel" cancel-text="cancel">
 				<template v-slot:searchIcon>
 					<uni-icons color="#999999" size="18" type="home" />
 				</template>
 			</uni-search-bar>
-		</uni-section>
+		</uni-section> -->
 
 
 		<scroll-view>
