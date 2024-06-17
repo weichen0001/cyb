@@ -25,6 +25,13 @@
 			{
 				"navigationBarTitleText" : ""
 			}
+		},
+		{
+			"path" : "pages/sx/sx",
+			"style" : 
+			{
+				"navigationBarTitleText" : "筛选"
+			}
 		}
 	],
 	"tabBar": {

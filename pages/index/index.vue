@@ -1,34 +1,54 @@
 <template>
 	<view>
 
-		<uni-section title="基本用法" type="line">
-			<uni-search-bar @confirm="search" :focus="focusFlag" v-model="searchValue" @blur="blur" @focus="focus"
-				@input="input" cancelButton="none" @cancel="cancel" @clear="clear">
-				<template v-slot:searchIcon>
-					筛选<uni-icons  size="8" class="icon iconfont icon-choose"></uni-icons>
-				</template>
-			</uni-search-bar>
-		</uni-section>
 
-        
-<!-- 		<uni-section title="自定义icon" type="line">
-			<uni-search-bar placeholder="自定义searchIcon" @confirm="search" @cancel="cancel" cancel-text="cancel">
-				<template v-slot:searchIcon>
-					<uni-icons color="#999999" size="18" type="home" />
-				</template>
-			</uni-search-bar>
-		</uni-section> -->
+		<uni-search-bar @confirm="search" :focus="false" v-model="searchValue" @blur="blur" @focus="focus"
+			@input="input" cancelButton="none" @cancel="cancel" @clear="clear">
+			<template v-slot:searchIcon>
+				<view @click="toggle('top')">
+					筛选<uni-icons size="8" class="icon iconfont icon-choose"></uni-icons>
+				</view>
+			</template>
+		</uni-search-bar>
 
 
 		<scroll-view>
-			<uni-section title="双标题卡" type="line" v-for="elem in array" :key="elem.id">
+			<view v-for="elem in array" :key="elem.id">
 				<uni-card :title="elem.title" :sub-title="elem.name" extra="额外信息" :thumbnail="avatar" @click="onClick">
 					<text class="uni-body">关联行业。</text>
 				</uni-card>
-			</uni-section>
+			</view>
 		</scroll-view>
 	</view>
 
+	<view>
+		<!-- 普通弹窗 -->
+		<uni-popup ref="popup" background-color="#fff" @change="change">
+			<view class="popup-content" :class="{ 'popup-height': type === 'left' || type === 'right' }">
+				<uni-section title="行业" type="line" padding>
+
+
+					<!-- 			<view class="tag-view">
+					
+						<uni-tag class="tag" v-for="tag in tags" :key="tag.id" :text="tag.name" :inverted="tag.inverted"
+							@click="setInverted(tag)"></uni-tag>
+					
+					
+					</view> -->
+
+					<view class="tag-container">
+						<view class="row" v-for="(row, index) in tagRows" :key="index">
+							<uni-tag class="tag" v-for="tag in row" :key="tag.id" :text="tag.name"
+								:inverted="tag.inverted" @click="setInverted2(tag)"></uni-tag>
+						</view>
+					</view>
+
+
+
+				</uni-section>
+			</view>
+		</uni-popup>
+	</view>
 </template>
 
 <script>
@@ -52,7 +72,125 @@
 						age: 18
 					},
 				],
-				focusFlag: false
+				focusFlag: false,
+				inverted: false,
+				tags: [{
+						id: 1,
+						name: "不限",
+						inverted: true,
+					},
+					{
+						id: 2,
+						name: "医疗健康",
+						inverted: true,
+					},
+					{
+						id: 3,
+						name: "旅游",
+						inverted: true,
+					},
+					{
+						id: 2,
+						name: "医疗健康",
+						inverted: true,
+					},
+					{
+						id: 3,
+						name: "旅游",
+						inverted: true,
+					},
+					{
+						id: 2,
+						name: "医疗健康",
+						inverted: true,
+					},
+					{
+						id: 3,
+						name: "旅游",
+						inverted: true,
+					},
+					{
+						id: 2,
+						name: "医疗健康",
+						inverted: true,
+					},
+					{
+						id: 3,
+						name: "旅游",
+						inverted: true,
+					},
+					{
+						id: 2,
+						name: "医疗健康",
+						inverted: true,
+					},
+					{
+						id: 3,
+						name: "旅游",
+						inverted: true,
+					},
+					{
+						id: 2,
+						name: "医疗健康",
+						inverted: true,
+					},
+					{
+						id: 3,
+						name: "旅游",
+						inverted: true,
+					}
+				],
+				tagRows: [
+					[{
+							id: 1,
+							name: "不限",
+							inverted: true,
+						},
+						{
+							id: 2,
+							name: "医疗健康",
+							inverted: true,
+						},
+						{
+							id: 3,
+							name: "旅游",
+							inverted: true,
+						}
+					],
+					[{
+							id: 4,
+							name: "音乐/视频/阅读",
+							inverted: true,
+						},
+						{
+							id: 5,
+							name: "在线教育",
+							inverted: true,
+						},
+						{
+							id: 6,
+							name: "社交网络",
+							inverted: true,
+						}
+					],
+					[{
+							id: 7,
+							name: "人力资源服务",
+							inverted: true,
+						},
+						{
+							id: 8,
+							name: "企业服务",
+							inverted: true,
+						},
+						{
+							id: 9,
+							name: "计算机软件",
+							inverted: true,
+						}
+					]
+				],
+				selectedTags: []
 			}
 		},
 		onLoad() {
@@ -67,11 +205,15 @@
 		},
 		onShow() {
 			console.log('页面显示');
-			// 清空搜索框焦点
-			this.focusFlag = false
 		},
 		methods: {
+			toggle(type) {
+
+				// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
+				this.$refs.popup.open(type)
+			},
 			search(res) {
+				console.log('搜索')
 				uni.showToast({
 					title: '搜索：' + res.value,
 					icon: 'none'
@@ -107,7 +249,87 @@
 					title: '点击取消，输入值为：' + res.value,
 					icon: 'none'
 				})
-			}
+			},
+			sxClick(res) {
+				console.log('筛选:')
+				uni.navigateTo({
+					url: '/pages/sx/sx' // 跳转到搜筛选页
+				})
+
+			},
+			setInverted(tag) {
+				this.tags.forEach((item, index) => {
+					if (item.id === tag.id) {
+						if (item.inverted) {
+							item.inverted = false
+						} else {
+							item.inverted = true
+						}
+					}
+				});
+				if (tag.id === 1 && !tag.inverted) {
+					this.tags.forEach((item, index) => {
+						if (item.id !== 1) {
+							item.inverted = true
+						}
+					});
+				}
+				if (tag.id !== 1 && !tag.inverted) {
+					this.tags.forEach((item, index) => {
+						if (item.id === 1) {
+							item.inverted = true
+						}
+					});
+				}
+				this.selectedTags = []
+				this.tags.forEach((item, index) => {
+					if (!item.inverted) {
+						this.selectedTags.push(item.id)
+					}
+				});
+				console.log("选择行业：" + this.selectedTags)
+			},
+
+			setInverted2(tag) {
+				this.tagRows.forEach((tags, index) => {
+					tags.forEach((item, index) => {
+						if (item.id === tag.id) {
+							if (item.inverted) {
+								item.inverted = false
+							} else {
+								item.inverted = true
+							}
+						}
+					});
+				});
+				if (tag.id === 1 && !tag.inverted) {
+					this.tagRows.forEach((tags, index) => {
+						tags.forEach((item, index) => {
+							if (item.id !== 1) {
+								item.inverted = true
+							}
+						});
+					});
+				}
+				if (tag.id !== 1 && !tag.inverted) {
+					this.tagRows.forEach((tags, index) => {
+						tags.forEach((item, index) => {
+							if (item.id === 1) {
+								item.inverted = true
+							}
+						});
+					});
+				}
+				this.selectedTags = []
+				this.tagRows.forEach((tags, index) => {
+					tags.forEach((item, index) => {
+						if (!item.inverted) {
+							this.selectedTags.push(item.id)
+						}
+					});
+				});
+				console.log("选择行业：" + this.selectedTags)
+			},
 		},
 		onBackPress() {
 			// #ifdef APP-PLUS
@@ -118,26 +340,6 @@
 </script>
 
 <style lang="scss">
-
-
-
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-	
 	.search-result {
 		padding-top: 10px;
 		padding-bottom: 20px;
@@ -159,5 +361,35 @@
 
 	.uni-mt-10 {
 		margin-top: 10px;
+	}
+
+	/*自定义icon*/
+	.iconfont {
+		font-family: "iconfont" !important;
+		font-size: 16px;
+		font-style: normal;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	/*标签*/
+	.container {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		padding: 10px;
+	}
+
+	.row {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 10px;
+	}
+
+	.tag {
+		width: calc(33.33% - 20px);
+		margin-right: 10px;
+		text-align: center;
+		/* 添加这行代码使文字居中 */
 	}
 </style>
