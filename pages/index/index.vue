@@ -1,60 +1,82 @@
 <template>
 	<view>
+
 		<uni-section title="基本用法" type="line">
-			<uni-search-bar @confirm="search" :focus="focusFlag" v-model="searchValue" @blur="blur" @focus="focus" @input="input"  cancelButton="none"
-				@cancel="cancel" @clear="clear">
+			<uni-search-bar @confirm="search" :focus="focusFlag" v-model="searchValue" @blur="blur" @focus="focus"
+				@input="input" cancelButton="none" @cancel="cancel" @clear="clear">
+				<template v-slot:searchIcon>
+					筛选<uni-icons  size="8" class="icon iconfont icon-choose"></uni-icons>
+				</template>
 			</uni-search-bar>
 		</uni-section>
-		
+
+        
+		<uni-section title="自定义icon" type="line">
+			<uni-search-bar placeholder="自定义searchIcon" @confirm="search" @cancel="cancel" cancel-text="cancel">
+				<template v-slot:searchIcon>
+					<uni-icons color="#999999" size="18" type="home" />
+				</template>
+			</uni-search-bar>
+		</uni-section>
+
+
 		<scroll-view>
-			<uni-section title="双标题卡" type="line"  v-for="elem in array" :key="elem.id">
+			<uni-section title="双标题卡" type="line" v-for="elem in array" :key="elem.id">
 				<uni-card :title="elem.title" :sub-title="elem.name" extra="额外信息" :thumbnail="avatar" @click="onClick">
 					<text class="uni-body">关联行业。</text>
 				</uni-card>
 			</uni-section>
 		</scroll-view>
 	</view>
-	
+
 </template>
 
 <script>
-	import { test } from './index-api.js'
+	import {
+		test
+	} from './index-api.js'
 
 	export default {
 		data() {
 			return {
 				searchValue: '',
 				avatar: 'https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png',
-				array:[
-					{id:1,name:"小明",age:16},
-					{id:2,name:"大明",age:18},
+				array: [{
+						id: 1,
+						name: "小明",
+						age: 16
+					},
+					{
+						id: 2,
+						name: "大明",
+						age: 18
+					},
 				],
-		        focusFlag: false
+				focusFlag: false
 			}
 		},
 		onLoad() {
-		    console.log('页面加载');
+			console.log('页面加载');
 			// 接口调用
 			test().then((res) => {
 				console.log(111)
 				console.log(res)
 				this.array = res.data
-				   
-			}).catch(err => {
-			})
+
+			}).catch(err => {})
 		},
-		 onShow() {
-		    console.log('页面显示');
+		onShow() {
+			console.log('页面显示');
 			// 清空搜索框焦点
 			this.focusFlag = false
-		  },
+		},
 		methods: {
 			search(res) {
 				uni.showToast({
 					title: '搜索：' + res.value,
 					icon: 'none'
 				})
-				
+
 			},
 			input(res) {
 				console.log('----input:', res)
@@ -70,15 +92,15 @@
 					title: 'blur事件，输入值为：' + res.value,
 					icon: 'none'
 				})
-				
+
 			},
 			focus(e) {
 				console.log('跳转:')
-				
-				uni.navigateTo({
-				  url: '/pages/search/search'// 跳转到搜索页
-				})
-				
+
+				// uni.navigateTo({
+				// 	url: '/pages/search/search' // 跳转到搜索页
+				// })
+
 			},
 			cancel(res) {
 				uni.showToast({
@@ -97,6 +119,25 @@
 
 <style lang="scss">
 
+
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+	
 	.search-result {
 		padding-top: 10px;
 		padding-bottom: 20px;
@@ -106,7 +147,7 @@
 	.search-result-text {
 		text-align: center;
 		font-size: 14px;
-		color:#666;
+		color: #666;
 	}
 
 	.example-body {
