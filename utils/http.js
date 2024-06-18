@@ -47,7 +47,7 @@ export const apiResquest = (prams) => { //prams 为我们需要调用的接口AP
 				uni.hideLoading()
 			},
 			complete: () => {
-				uni.hideLoading()
+				
 			}
 		});
 	})

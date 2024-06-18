@@ -2,11 +2,11 @@
 	<view>
 
 
-		<uni-search-bar @confirm="search" :focus="false" v-model="searchValue" @blur="blur" @focus="focus"
+		<uni-search-bar @confirm="search" :focus="false" v-model="selectFormData.ideaName" @blur="blur" @focus="focus"
 			@input="input" cancelButton="none" @cancel="cancel" @clear="clear">
 			<template v-slot:searchIcon>
 				<view @click="toggle('top')">
-					筛选<uni-icons size="8" class="icon iconfont icon-choose"></uni-icons>
+					筛选{{sxText}}<uni-icons size="8" class="icon iconfont icon-choose"></uni-icons>
 				</view>
 			</template>
 		</uni-search-bar>
@@ -39,8 +39,15 @@
 					<view class="tag-container">
 						<view class="row" v-for="(row, index) in tagRows" :key="index">
 							<uni-tag class="tag" v-for="tag in row" :key="tag.id" :text="tag.name"
-								:inverted="tag.inverted" @click="setInverted2(tag)"></uni-tag>
+								:inverted="tag.inverted" @click="setInverted(tag)"></uni-tag>
 						</view>
+					</view>
+
+					<view class="view-class">
+						<button type="default" plain="true" size="mini" class="margin-right: 20px;"
+							@click="clearHy()">清除</button>
+						<button type="primary" plain="true" size="mini" class="margin-right: 20px;"
+							@click="confirmHy()">确定</button>
 					</view>
 
 
@@ -53,7 +60,7 @@
 
 <script>
 	import {
-		test
+		test,ideaList
 	} from './index-api.js'
 
 	export default {
@@ -74,6 +81,8 @@
 				],
 				focusFlag: false,
 				inverted: false,
+				sxText: '',
+				sxCount: 0,
 				tags: [{
 						id: 1,
 						name: "不限",
@@ -150,11 +159,6 @@
 							id: 2,
 							name: "医疗健康",
 							inverted: true,
-						},
-						{
-							id: 3,
-							name: "旅游",
-							inverted: true,
 						}
 					],
 					[{
@@ -165,11 +169,6 @@
 						{
 							id: 5,
 							name: "在线教育",
-							inverted: true,
-						},
-						{
-							id: 6,
-							name: "社交网络",
 							inverted: true,
 						}
 					],
@@ -182,15 +181,17 @@
 							id: 8,
 							name: "企业服务",
 							inverted: true,
-						},
-						{
-							id: 9,
-							name: "计算机软件",
-							inverted: true,
 						}
 					]
 				],
-				selectedTags: []
+				selectedTags: [],
+				// 基础表单数据
+				selectFormData: {
+					ideaName: '',
+					industryIds: [],
+					pageNo:1,
+					pageSize:1000
+				},
 			}
 		},
 		onLoad() {
@@ -213,11 +214,18 @@
 				this.$refs.popup.open(type)
 			},
 			search(res) {
-				console.log('搜索')
+				console.log('搜索:'+JSON.stringify(this.selectFormData))
 				uni.showToast({
 					title: '搜索：' + res.value,
 					icon: 'none'
 				})
+
+				ideaList(this.selectFormData).then((res) => {
+					console.log("返回:"+res)
+					this.array = res.data
+
+				}).catch(err => {})
+
 
 			},
 			input(res) {
@@ -257,40 +265,9 @@
 				})
 
 			},
-			setInverted(tag) {
-				this.tags.forEach((item, index) => {
-					if (item.id === tag.id) {
-						if (item.inverted) {
-							item.inverted = false
-						} else {
-							item.inverted = true
-						}
-					}
-				});
-				if (tag.id === 1 && !tag.inverted) {
-					this.tags.forEach((item, index) => {
-						if (item.id !== 1) {
-							item.inverted = true
-						}
-					});
-				}
-				if (tag.id !== 1 && !tag.inverted) {
-					this.tags.forEach((item, index) => {
-						if (item.id === 1) {
-							item.inverted = true
-						}
-					});
-				}
-				this.selectedTags = []
-				this.tags.forEach((item, index) => {
-					if (!item.inverted) {
-						this.selectedTags.push(item.id)
-					}
-				});
-				console.log("选择行业：" + this.selectedTags)
-			},
 
-			setInverted2(tag) {
+
+			setInverted(tag) {
 				this.tagRows.forEach((tags, index) => {
 					tags.forEach((item, index) => {
 						if (item.id === tag.id) {
@@ -320,16 +297,51 @@
 						});
 					});
 				}
+				// this.selectedTags = []
+				// this.tagRows.forEach((tags, index) => {
+				// 	tags.forEach((item, index) => {
+				// 		if (!item.inverted) {
+				// 			this.selectedTags.push(item.id)
+				// 		}
+				// 	});
+				// });
+				console.log("选择行业：" + this.selectedTags)
+			},
+
+			clearHy() {
 				this.selectedTags = []
+				console.log("选择行业：" + this.selectedTags)
 				this.tagRows.forEach((tags, index) => {
 					tags.forEach((item, index) => {
-						if (!item.inverted) {
-							this.selectedTags.push(item.id)
+						if (item.id === 1) {
+							item.inverted = false
+						} else {
+							item.inverted = true
 						}
 					});
 				});
-				console.log("选择行业：" + this.selectedTags)
 			},
+
+			confirmHy() {
+				this.selectFormData.industryIds = []
+				this.sxCount = 0
+				this.sxText = ''
+				this.tagRows.forEach((tags, index) => {
+					tags.forEach((item, index) => {
+						if (!item.inverted) {
+							this.selectFormData.industryIds.push(item.id)
+							if (item.id !== 1) {
+								this.sxCount++
+							}
+						}
+					});
+				});
+				console.log("选择行业：" + this.selectFormData.industryIds)
+				if (this.sxCount > 0) {
+					this.sxText = '•' + this.sxCount
+				}
+				this.$refs.popup.close()
+			}
 		},
 		onBackPress() {
 			// #ifdef APP-PLUS
@@ -387,9 +399,15 @@
 	}
 
 	.tag {
-		width: calc(33.33% - 20px);
+		width: calc(45.33%);
 		margin-right: 10px;
 		text-align: center;
 		/* 添加这行代码使文字居中 */
+	}
+
+
+	.view-class {
+		display: flex;
+		justify-content: flex-end;
 	}
 </style>

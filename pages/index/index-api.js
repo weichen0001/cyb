@@ -17,3 +17,11 @@ export const test  = (query) => {
         method: 'GET'
     })
 }
+
+export const ideaList  = (query) => {
+    return apiResquest({
+        url: '/homepage/idea/list',
+        method: 'POST',
+		query:query
+    })
+}

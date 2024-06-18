@@ -21,7 +21,7 @@
 				</view>
 			</uni-section>
 
-			<uni-section type="line" title="需求描述">
+		<!-- 	<uni-section type="line" title="需求描述">
 				<view class="example">
 					<view class="hint-font">&nbsp;&nbsp;&nbsp;&nbsp;请描述下您的需求，需要哪个行业的支持，以及具体需要什么样的支持</view>
 				</view>
@@ -35,7 +35,7 @@
 							placeholder="请输入需求描述" />
 					</uni-forms-item>
 				</view>
-			</uni-section>
+			</uni-section> -->
 
 			<!-- <uni-forms-item v-for="(item,index) in baseFormData.demand" :key="item.id" :label="item.label+' '+index"
 				required :rules="rules" :name="['demand',index,'value']">
@@ -103,15 +103,16 @@
 							errorMessage: '点子描述不能为空'
 						}]
 					}
-				},
+				}
 			}
 		},
 		computed: {
-			baseFormData() {
-				console.log(this.baseFormData.demand);
-			}
+			// baseFormData() {
+			// 	console.log(this.baseFormData.demand);
+			// }
 		},
 		created() {
+			this.industryData=[{"text":"13","value":1}]
 			// console.log(this.baseFormData.demand);
 			// console.log(123);
 			// this.baseFormData.demand.push({
@@ -121,25 +122,26 @@
 			// 	demandDescribe:"1",
 			// 	id: Date.now()
 			// });
-			// industryList().then(result => {
-			// 	this.industryData = result.data.map(item => ({
-			// 		"text": item.name,
-			// 		"value": item.id
-			// 	}));
-			// });
-			// console.log(this.$refs.select);
+			industryList().then(result => {
+				this.industryData = result.data.map(item => ({
+					"text": item.name,
+					"value": item.id
+				}));
+			});
+			console.log(this.$refs.select);
 		},
 		methods: {
 			add() {
-				this.baseFormData.demand.push({
-					label: '域名',
-					value: '',
-					rules: [{
-						'required': true,
-						errorMessage: '域名项必填'
-					}],
-					id: Date.now()
-				})
+				this.industryData=[{"text":"13","value":1}]
+				// this.baseFormData.demand.push({
+				// 	label: '域名',
+				// 	value: '',
+				// 	rules: [{
+				// 		'required': true,
+				// 		errorMessage: '域名项必填'
+				// 	}],
+				// 	id: Date.now()
+				// })
 			},
 			del(id) {
 				let index = this.dynamicLists.findIndex(v => v.id === id)
